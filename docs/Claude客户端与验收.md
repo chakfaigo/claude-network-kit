@@ -10,6 +10,12 @@
 
 Chrome是独立验收项。必须执行[Chrome专用配置与验收](Chrome专用配置与验收.md)，核对QuicAllowed、DnsOverHttpsMode和WebRtcIPHandling目标值与实际生效。当前安装器没有自动设置这些Chrome策略，本版Chrome经受管TUN，系统代理保持关闭；TUN正常不等于Chrome策略已完成。中文语言可保留。
 
+## 实际启动环境与请求目标（必须检查）
+
+按[强制流程C2–C5](必须执行的部署流程.md)核对真正生效的进程环境、大小写代理变量、NO_PROXY、CLAUDE_CONFIG_DIR、全局/项目/托管设置及启动参数。当前安装器只合并默认全局文件，不检查所有覆盖来源。
+
+NO_PROXY不得排除Claude或使用通配全部；自定义目录不能悄悄跳过代理env。未知ANTHROPIC_BASE_URL、网关、API Key或远端执行位置都须先纳入路由与认证验收。不要输出完整环境泄漏Key，也不要用sudo或关闭证书校验来让连接成功。后台旧进程可能保留旧环境，修改后按客户端方式重开并复验。
+
 ## CLI
 
 1. 按[官方安装文档](https://code.claude.com/docs/en/setup)安装独立 CLI；原生安装不要求先装 Node.js。VS Code 扩展自带组件不代表终端已有 `claude`。
