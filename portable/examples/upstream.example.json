@@ -1,0 +1,15 @@
+{
+  "type": "vmess",
+  "server": "proxy.example.invalid",
+  "server_port": 8080,
+  "uuid": "00000000-0000-4000-8000-000000000000",
+  "security": "auto",
+  "alter_id": 0,
+  "transport": {
+    "type": "ws",
+    "path": "/REPLACE_LOCALLY",
+    "headers": {
+      "Host": "proxy.example.invalid"
+    }
+  }
+}

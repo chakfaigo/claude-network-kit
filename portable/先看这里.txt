@@ -1,0 +1,12 @@
+这是同事通用的Mac家宽保护包，不含任何真实账号。
+仅限Apple Silicon、macOS 13以上、尚未安装保护的新环境。
+请先阅读上一级README和docs/安装与回退.md。
+
+1. 准备自己的SOCKS5家宽、固定出口IPv4；可选普通代理仅支持美国VMess/WS。
+2. 双击“配置线路.command”。真实信息只保存本机private/node.json。
+3. 双击“安装.command”；先检测，再管理员授权。等待Home和日志检查通过。
+4. 按docs/Claude客户端与验收.md验证自己的应用。
+
+Home异常会阻断受保护目标；Origin仍保留保护，不是卸载。
+没有上游时，普通流量不会自动获得普通代理；Home下未列入分流的海外流量仍走家宽。
+不要向仓库上传private、已填写的上游JSON或含账号的整个目录。

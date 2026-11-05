@@ -1,0 +1,7 @@
+{
+  "server": "residential.example.invalid",
+  "port": 1080,
+  "username": "REPLACE_LOCALLY",
+  "password": "REPLACE_LOCALLY",
+  "expected_ip": "192.0.2.10"
+}

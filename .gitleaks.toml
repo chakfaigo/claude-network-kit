@@ -1,0 +1,9 @@
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Only SHA-256 file digests in the verified distribution manifest"
+condition = "AND"
+paths = ['(^|/)portable/manifest\.json$']
+regexTarget = "secret"
+regexes = ['^[a-f0-9]{64}$']
