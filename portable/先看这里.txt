@@ -1,6 +1,9 @@
 这是同事通用的Mac家宽保护包，不含任何真实账号。
 仅限Apple Silicon、macOS 13以上、尚未安装保护的新环境。
-请先阅读上一级README和docs/安装与回退.md。
+必须先阅读上一级README、docs/NetCoffee强制配置与验收.md、docs/实际排查经验.md和docs/安装与回退.md。
+中文系统/浏览器/界面允许；其他网络配置必须按11项映射严格检查，逐项填写本地验收记录。
+安装成功不等于验收完成。出口不符、DNS/流量绕路、保护未知、客户端未测时，不得开始日常使用。
+当前VMess/WS与SOCKS5不能直接套Chrome TLS指纹字段；未实现项必须记录，不得宣称完全满足网页字面要求。
 
 1. 准备自己的SOCKS5家宽、固定出口IPv4；可选普通代理仅支持美国VMess/WS。
 2. 双击“配置线路.command”。真实信息只保存本机private/node.json。
