@@ -6,6 +6,10 @@
 
 官方 Claude Code 支持 HTTP/HTTPS 代理，不支持只靠 SOCKS。因此 HTTP/HTTPS 变量必须有效，不能仅留 `ALL_PROXY`。NO_PROXY 仅允许预期的本机回环，不要写成 `*` 或把 Claude 域名排除。
 
+## Chrome
+
+Chrome是独立验收项。必须执行[Chrome专用配置与验收](Chrome专用配置与验收.md)，核对QuicAllowed、DnsOverHttpsMode和WebRtcIPHandling目标值与实际生效。当前安装器没有自动设置这些Chrome策略，系统代理/TUN正常不等于Chrome策略已完成。中文语言可保留。
+
 ## CLI
 
 1. 按[官方安装文档](https://code.claude.com/docs/en/setup)安装独立 CLI；原生安装不要求先装 Node.js。VS Code 扩展自带组件不代表终端已有 `claude`。
