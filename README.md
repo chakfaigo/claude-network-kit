@@ -12,7 +12,7 @@
 
 ## 最快开始
 
-1. 从本私库的 [Releases](https://github.com/chakfaigo/claude-network-kit/releases) 下载 `claude-network-kit-macos-arm64.zip`，完整解压；有仓库权限才能下载。
+1. 从本仓库的 [Releases](https://github.com/chakfaigo/claude-network-kit/releases) 下载 `claude-network-kit-macos-arm64.zip`，完整解压；仓库现已公开，无需登录 GitHub 或申请权限。
 2. 阅读 [安装与回退](docs/安装与回退.md)，准备自己的线路。若已有代理/VPN，先评估冲突，不要强行覆盖。
 3. 双击 `portable/配置线路.command`，输入自己的家宽信息；可选普通代理按 `portable/examples/upstream.example.json` 在本地准备。示例是无效占位数据，不能直接联网。
 4. 双击 `portable/安装.command`。它先检查线路，再请求本机管理员授权，最后等待 Home 与日志核验成功。
