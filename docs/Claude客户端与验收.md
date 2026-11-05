@@ -2,13 +2,13 @@
 
 ## 先把保护安装与客户端安装分开
 
-本包不安装 Claude，不含 Claude 登录态。安装保护会在保留无关键的前提下，将用户 `~/.claude/settings.json` 的 env 代理设置到 `http://127.0.0.1:10808`；也保留供其他工具使用的 SOCKS 变量。终端启动环境不要假设一定相同，应实际核对。
+本包不安装 Claude，不含 Claude 登录态。安装保护会在保留无关键的前提下，将用户 `~/.claude/settings.json` 的 env 代理设置到 `http://127.0.0.1:10808`；也保留供其他工具使用的 SOCKS 变量。本版不自动写.zprofile/.zshrc，也不启用macOS系统代理；其他终端工具的启动环境不要假设相同，应实际核对。
 
 官方 Claude Code 支持 HTTP/HTTPS 代理，不支持只靠 SOCKS。因此 HTTP/HTTPS 变量必须有效，不能仅留 `ALL_PROXY`。NO_PROXY 仅允许预期的本机回环，不要写成 `*` 或把 Claude 域名排除。
 
 ## Chrome
 
-Chrome是独立验收项。必须执行[Chrome专用配置与验收](Chrome专用配置与验收.md)，核对QuicAllowed、DnsOverHttpsMode和WebRtcIPHandling目标值与实际生效。当前安装器没有自动设置这些Chrome策略，系统代理/TUN正常不等于Chrome策略已完成。中文语言可保留。
+Chrome是独立验收项。必须执行[Chrome专用配置与验收](Chrome专用配置与验收.md)，核对QuicAllowed、DnsOverHttpsMode和WebRtcIPHandling目标值与实际生效。当前安装器没有自动设置这些Chrome策略，本版Chrome经受管TUN，系统代理保持关闭；TUN正常不等于Chrome策略已完成。中文语言可保留。
 
 ## CLI
 

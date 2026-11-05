@@ -1,0 +1,47 @@
+{
+  "date": "2026-11-05",
+  "scope": "offline rule-set matching only; network denied; no target-machine route verification",
+  "core_version": "1.14.4-home-ventura",
+  "rules": {
+    "geosite-cn": {
+      "sha256": "2f4af0be08f2ff494a8fcdef992dc92a2267600ce26c9bba17421d1ce9a6715c",
+      "upstream_revision": "not recorded in inherited asset provenance"
+    },
+    "geoip-cn": {
+      "sha256": "ebee603fdf402314b44b9f653cdcf6d9cc9c41e84e2b3515e3123c5c920a93bc",
+      "upstream_revision": "not recorded in inherited asset provenance"
+    }
+  },
+  "samples": [
+    {
+      "rule": "geosite-cn",
+      "target": "www.baidu.com",
+      "matched": true
+    },
+    {
+      "rule": "geosite-cn",
+      "target": "www.qq.com",
+      "matched": true
+    },
+    {
+      "rule": "geosite-cn",
+      "target": "www.taobao.com",
+      "matched": true
+    },
+    {
+      "rule": "geosite-cn",
+      "target": "api.anthropic.com",
+      "matched": false
+    },
+    {
+      "rule": "geoip-cn",
+      "target": "223.5.5.5",
+      "matched": true
+    },
+    {
+      "rule": "geoip-cn",
+      "target": "1.1.1.1",
+      "matched": false
+    }
+  ]
+}
