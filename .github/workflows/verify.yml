@@ -6,7 +6,7 @@ permissions:
   contents: read
 jobs:
   isolated:
-    runs-on: macos-14
+    runs-on: macos-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
