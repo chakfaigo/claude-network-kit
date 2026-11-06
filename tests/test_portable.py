@@ -100,6 +100,19 @@ class UpstreamConfigTests(unittest.TestCase):
  def test_preflight_invalid_or_duplicate_ports_rejected(self):
   for ports in [(1080,1080),(1,1080),(True,1080),(65536,1080)]:
    with self.assertRaises(ValueError):C.build_preflight(WITH_UPSTREAM,'en0',*ports)
+ def test_claude_app_and_dns_are_protected_in_all_supported_modes(self):
+  for node in [NODE,WITH_UPSTREAM]:
+   for name,value in C.build_bundle(node,'en0','/fixture')['configs'].items():
+    route=value['route']['rules'][4];dns=value['dns']['rules'][1]
+    self.assertIn('claude.app',route['domain_suffix']);self.assertIn('claude.app',dns['domain_suffix'])
+    if name in ('home_direct','home_relay'):self.assertEqual(route['outbound'],'residential');self.assertEqual(dns['server'],'remote-dns')
+    else:self.assertEqual(route['action'],'reject');self.assertEqual(dns['rcode'],'REFUSED')
+ def test_preflight_resolves_ipv4_only_after_protection_and_before_forwarding(self):
+  rules=C.build_preflight(WITH_UPSTREAM,'en0',19081,19082)['route']['rules']
+  resolve=next(i for i,r in enumerate(rules) if r.get('action')=='resolve')
+  self.assertEqual(rules[resolve]['strategy'],'ipv4_only')
+  self.assertLess(next(i for i,r in enumerate(rules) if 'claude.app' in r.get('domain_suffix',[])),resolve)
+  self.assertTrue(all(i>resolve for i,r in enumerate(rules) if 'outbound' in r))
  def test_upstream_source_inputs_not_modified(self):
   n=copy.deepcopy(WITH_UPSTREAM);C.build_bundle(n,'en0','/fixture');self.assertEqual(n,WITH_UPSTREAM)
 

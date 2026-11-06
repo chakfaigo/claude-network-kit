@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>PayloadType</key>
+	<string>Configuration</string>
+	<key>PayloadVersion</key>
+	<integer>1</integer>
+	<key>PayloadIdentifier</key>
+	<string>org.claude-network-kit.chrome-network-baseline</string>
+	<key>PayloadUUID</key>
+	<string>58E14532-9042-44EE-BECE-B6F67DD2AD4A</string>
+	<key>PayloadDisplayName</key>
+	<string>Claude Network Kit · Chrome网络基线</string>
+	<key>PayloadDescription</key>
+	<string>仅设置Chrome QUIC、浏览器DoH和WebRTC。保留语言、时区和账号；不含证书。安装后完全退出重开Chrome，并在chrome://policy核验。已有管理策略时先由管理员检查冲突。</string>
+	<key>PayloadOrganization</key>
+	<string>Claude Network Kit</string>
+	<key>PayloadScope</key>
+	<string>User</string>
+	<key>PayloadRemovalDisallowed</key>
+	<false/>
+	<key>PayloadContent</key>
+	<array>
+		<dict>
+			<key>PayloadType</key>
+			<string>com.apple.ManagedClient.preferences</string>
+			<key>PayloadVersion</key>
+			<integer>1</integer>
+			<key>PayloadIdentifier</key>
+			<string>org.claude-network-kit.chrome-network-baseline.preferences</string>
+			<key>PayloadUUID</key>
+			<string>BF7DF968-09D5-4B66-A1D1-0113E81CE697</string>
+			<key>PayloadDisplayName</key>
+			<string>Chrome三项网络策略</string>
+			<key>PayloadContent</key>
+			<dict>
+				<key>com.google.Chrome</key>
+				<dict>
+					<key>Forced</key>
+					<array>
+						<dict>
+							<key>mcx_preference_settings</key>
+							<dict>
+								<key>QuicAllowed</key>
+								<false/>
+								<key>DnsOverHttpsMode</key>
+								<string>off</string>
+								<key>WebRtcIPHandling</key>
+								<string>disable_non_proxied_udp</string>
+							</dict>
+						</dict>
+					</array>
+				</dict>
+			</dict>
+		</dict>
+	</array>
+</dict>
+</plist>

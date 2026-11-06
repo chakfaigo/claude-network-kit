@@ -1,0 +1,144 @@
+{
+  "version": "v2026.11.05.5",
+  "test_host": {
+    "system": "macOS",
+    "version": "26.2",
+    "architecture": "arm64"
+  },
+  "isolated": {
+    "tests": 235,
+    "passed": true,
+    "suites": [
+      {
+        "suite": "test_check_setup.py",
+        "exit": 0,
+        "tests": 22
+      },
+      {
+        "suite": "test_configure.py",
+        "exit": 0,
+        "tests": 4
+      },
+      {
+        "suite": "test_guard_health.py",
+        "exit": 0,
+        "tests": 14
+      },
+      {
+        "suite": "test_guard_notify.py",
+        "exit": 0,
+        "tests": 23
+      },
+      {
+        "suite": "test_guard_pf.py",
+        "exit": 0,
+        "tests": 14
+      },
+      {
+        "suite": "test_guard_pf_runtime.py",
+        "exit": 0,
+        "tests": 20
+      },
+      {
+        "suite": "test_guard_runtime.py",
+        "exit": 0,
+        "tests": 58
+      },
+      {
+        "suite": "test_portable.py",
+        "exit": 0,
+        "tests": 57
+      },
+      {
+        "suite": "test_user_services.py",
+        "exit": 0,
+        "tests": 23
+      }
+    ]
+  },
+  "source_sha256": {
+    "check_setup.py": "cc25cf0cf7184403d86efd7c529328a621532562e4e1795e67dd1755fab047bd",
+    "configure.py": "5e6ab8bf018d1a32e98a477fa700eff175f3033fa0d51e283dc70ef3f1675f5d",
+    "controller.py": "d553086949655c5d08819b06bf6a49d85bc0ca6ce2129fd89a20230ab426b971",
+    "guard_config.py": "a40d23c23897ce7aa1bad7a32027f14345cb562684789844739ffa2ae1af9b84",
+    "guard_health.py": "f98435a826cf1c86ec2cba878a62c7ffe135a989f86eb2cb7253e5e95ac99d22",
+    "guard_install.py": "77fb078145bccf350dcbdcb1037cd44dad44a9b1720f38c0b98f9db09f983f80",
+    "guard_notify.py": "dca072364d298e14d8170657e54822fecfbd400d10f479ab6e410352d409b22e",
+    "guard_pf.py": "20eca076d9660a5215726bbd842686ab9f8629fc219d3626e2c9ea54b879b50f",
+    "guard_runtime.py": "8efe8fbd6c908027cf8ae7de7607e47831230c68e55a67f6eae53bf8d150c138"
+  },
+  "native_offline_core": {
+    "network_denied": true,
+    "configurations": [
+      "False-home_direct.json",
+      "False-home_direct_blocked.json",
+      "False-original.json",
+      "True-home_direct.json",
+      "True-home_direct_blocked.json",
+      "True-original.json",
+      "True-home_relay.json",
+      "True-home_relay_blocked.json",
+      "preflight.json"
+    ],
+    "domain_samples": [
+      {
+        "domain": "claude.app",
+        "matches": true
+      },
+      {
+        "domain": "x.livepreview.claude.app",
+        "matches": true
+      },
+      {
+        "domain": "notclaude.app",
+        "matches": false
+      },
+      {
+        "domain": "claude.app.evil.example",
+        "matches": false
+      },
+      {
+        "domain": "api.anthropic.com",
+        "matches": true
+      },
+      {
+        "domain": "www.douyin.com",
+        "matches": false
+      },
+      {
+        "domain": "chatgpt.com",
+        "matches": false
+      }
+    ]
+  },
+  "temporary_native_user_agents": {
+    "scope": "Only separately named temporary user agents, sleep/true executables; no production services, network, proxy or firewall changes",
+    "checks": [
+      {
+        "test": "live_menu_full_reload",
+        "passed": true
+      },
+      {
+        "test": "live_loaded_interval_3600_to_30_despite_matching_file_and_arguments",
+        "passed": true
+      }
+    ],
+    "cleanup": [
+      {
+        "test_agent_removed": true
+      },
+      {
+        "test_agent_removed": true
+      }
+    ],
+    "passed": true
+  },
+  "profile_validation": "plist structure and only three allowed network keys; manual installation and Chrome acceptance still pending on target Mac",
+  "not_verified": [
+    "Fresh target-Mac installation and actual credentials/exit",
+    "Chrome profile installation and browser acceptance on target Mac",
+    "Authenticated business requests, sustained workload and supplier faults",
+    "Target-Mac reboot/wake/network changes and visible notifications"
+  ],
+  "privacy": "Only synthetic test identities and newly generated generic results; no private handoff transcripts/logs or credentials included"
+}

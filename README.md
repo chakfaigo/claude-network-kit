@@ -2,6 +2,15 @@
 
 供同事使用的 macOS 家宽保护包：Home / Origin、Claude 分流、断线阻断、本机提醒、菜单状态与诊断。**不含任何真实线路、账号密码、订阅身份或个人登录数据。每位使用者必须准备自己的线路。**
 
+## 第一次接入，从这里开始
+
+当前包版本见`portable/VERSION`。[新机快速接入](docs/新机快速接入.md)把操作收敛为：**核对下载 → 只读接入检查 → 填线路并安装一次 → Chrome及各客户端配置 → 实测与签收**。自带运行时，无需先装Homebrew或开发工具。
+
+- [下载最新完整包](https://github.com/chakfaigo/claude-network-kit/releases/latest/download/claude-network-kit-macos-arm64.zip) · [下载校验值](https://github.com/chakfaigo/claude-network-kit/releases/latest/download/SHA256SUMS.txt)
+- `portable/接入检查.command`：安装前后均可运行，只读检查并列出缺项，不联网、不自动判定验收完成。
+- `portable/examples/Chrome网络基线.mobileconfig`：仅三项网络策略，按专项说明手动部署；不改语言、时区或账号。
+- 已有安装先读[更新与维护](docs/更新与维护.md)；下载新包或点击Home不会自动升级。
+
 ## 首先执行：不可跳过的部署流程
 
 安装者和协助操作的AI必须按[必须执行的部署流程](docs/必须执行的部署流程.md)逐步执行。每项有编号、证据和失败处理：**安装前检查 → 安装与状态核对 → 各客户端实际配置 → 分流/故障/重启验证 → 本地签收**。
@@ -48,17 +57,17 @@
 - 可选普通代理／家宽前置：当前仅支持美国出口的 VMess + WebSocket，配置不含 TLS。其他协议不能直接填入，需先适配与验证。
 - Home 并非“除了 Claude，全部走普通代理”：只有 OpenAI、Notion 和列明的 VS Code 更新域名走普通代理；其余海外流量默认走家宽。国内与局域网按规则处理。
 
-## 最快开始
+## 接入后怎样保持稳定
 
-1. 从本仓库的 [Releases](https://github.com/chakfaigo/claude-network-kit/releases) 下载 `claude-network-kit-macos-arm64.zip`，完整解压；仓库现已公开，无需登录 GitHub 或申请权限。
-2. 先阅读上述强制标准及 [安装与回退](docs/安装与回退.md)，准备自己的线路。若已有代理/VPN，先评估冲突，不要强行覆盖。
-3. 双击 `portable/配置线路.command`，输入自己的家宽信息；可选普通代理按 `portable/examples/upstream.example.json` 在本地准备。示例是无效占位数据，不能直接联网。
-4. 双击 `portable/安装.command`。它先检查线路，再请求本机管理员授权，最后等待 Home 与日志核验成功。
-5. 按 [应用验收](docs/Claude客户端与验收.md) 分别测试浏览器、VS Code、CLI 和桌面端。
+按[稳定性验收与排障](docs/稳定性验收与排障.md)区分配置、出口健康、实际任务与故障恢复。避免反复切模式/重装；出现异常先保留证据，按层定位。本版补齐域名保护、预检解析与入口登记问题，**没有改变健康阈值，也没有证明家宽偶发断线已根治**。
 
-使用 GitHub “Download ZIP” 时应确认脚本可执行权限和运行时符号链接完整，推荐使用 Release ZIP。源代码、运行时和配套组件也一并保存在仓库中。
+推荐Release ZIP；GitHub源码ZIP还须注意可执行权限与运行时符号链接。版本改动及验证范围见[变更记录](CHANGELOG.md)。
 
 ## 文档入口
+
+- [新机快速接入](docs/新机快速接入.md)
+- [稳定性验收与排障](docs/稳定性验收与排障.md)
+- [旧机更新与维护](docs/更新与维护.md)
 
 - [必须执行的部署流程（第一入口）](docs/必须执行的部署流程.md)
 - [强制要求遗漏复核](docs/强制要求遗漏复核.md)
@@ -85,6 +94,6 @@
 
 `portable/src` 为 Python 保护程序；`portable/menu` 含 Swift 源码和本地签名的菜单程序；`portable/assets` 含 sing-box 和国内规则；`portable/python` 为自带 Python；`tests` 为隔离测试。`portable/来源与构建` 保留核心源码、许可证、构建参数和 Python 来源摘要。
 
-整理版本：2026-11-05。沿用已有保护架构，新增本地填写线路入口与分享文档，没有重新设计网络策略。没有在分享者的电脑上运行安装器或改变网络。历史偶发断线的根因尚未全部确定，不能宣称解决了供应商故障、所有系统兼容问题或账号限制。
+整理版本：2026-11-05。沿用已有保护架构，增加本地填写线路、只读检查、Chrome策略示例与分享文档；修复保护域名、预检解析及用户服务登记，保留固定出口和故障阻断原则。没有在分享者的电脑上运行安装器或改变网络。历史偶发断线的根因尚未全部确定，不能宣称解决了供应商故障、所有系统兼容问题或账号限制。
 
 此包需要修改系统网络、防火墙和后台服务；安装后的影响范围大于单个 Claude 应用。请先读安装说明。没有 Apple 开发者公证，不要关闭 Gatekeeper、SIP 或全局安全设置。

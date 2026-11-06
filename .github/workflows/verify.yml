@@ -1,0 +1,16 @@
+name: Isolated checks
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  isolated:
+    runs-on: macos-14
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run isolated logic tests
+        run: python3 -B tests/run_checks.py
+      # The distributed core is arm64. Release checks run --core on Apple Silicon;
+      # this runner's logic tests do not substitute for native or target-Mac tests.

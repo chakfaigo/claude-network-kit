@@ -8,7 +8,7 @@ ORDINARY_SUFFIXES = ['openai.com','chatgpt.com','oaistatic.com','oaiusercontent.
  'notion.so','notion.site','notion-static.com']
 ORDINARY_DOMAINS = ['update.code.visualstudio.com','marketplace.visualstudio.com',
  'vscode.download.prss.microsoft.com','vscode.blob.core.windows.net']
-SUFFIXES = ['anthropic.com','claude.ai','claude.com','clau.de','claudemcpclient.com',
+SUFFIXES = ['anthropic.com','claude.ai','claude.com','claude.app','clau.de','claudemcpclient.com',
  'claudemcpcontent.com','claudeusercontent.com','sentry.io','statsigapi.net','intercom.io','intercomcdn.com']
 DOMAINS = ['servd-anthropic-website.b-cdn.net','anthropic.com.cdn.cloudflare.net','anthropic.auth0.com',
  'anthropic-com.ghost.io','browser-intake-us5-datadoghq.com','cdn.usefathom.com']
@@ -118,5 +118,7 @@ def build_preflight(node,interface,original_port,relay_port):
   'route':{'default_domain_resolver':{'server':'local-dns','strategy':'ipv4_only'},'rules':[
     {'action':'sniff'},{'network':'udp','action':'reject'},{'ip_cidr':['::/0'],'action':'reject'},
     dict(targets(),action='reject'),{'ip_cidr':IPS[:],'action':'reject'},
+    # Match production's IPv4 target resolution before forwarding to VMess.
+    {'action':'resolve','strategy':'ipv4_only'},
     {'inbound':['check-original'],'outbound':'upstream'},
     {'inbound':['check-relay'],'outbound':'residential'}],'final':'upstream'}}
