@@ -3,10 +3,11 @@ from pathlib import Path
 import copy, ipaddress, json, re, uuid
 PORT = 10808
 TUN_INTERFACE = 'utun99'
-FLAVOR = 'fresh-mac-upstream-v2'
-ORDINARY_SUFFIXES = ['openai.com','chatgpt.com','oaistatic.com','oaiusercontent.com',
+FLAVOR = 'fresh-mac-home-unified-v3'
+# Keep explicitly requested services on Home even if a CN rule misclassifies them.
+HOME_SUFFIXES = ['openai.com','chatgpt.com','oaistatic.com','oaiusercontent.com',
  'notion.so','notion.site','notion-static.com']
-ORDINARY_DOMAINS = ['update.code.visualstudio.com','marketplace.visualstudio.com',
+HOME_DOMAINS = ['update.code.visualstudio.com','marketplace.visualstudio.com',
  'vscode.download.prss.microsoft.com','vscode.blob.core.windows.net']
 SUFFIXES = ['anthropic.com','claude.ai','claude.com','claude.app','clau.de','claudemcpclient.com',
  'claudemcpcontent.com','claudeusercontent.com','sentry.io','statsigapi.net','intercom.io','intercomcdn.com']
@@ -60,7 +61,7 @@ def build(node, interface, asset_dir, mode, via_relay=False):
  selected='original' if original else 'residential'
  local_resolver={'server':'local-dns','strategy':'ipv4_only'}
  out=[{'type':'direct','tag':'direct','bind_interface':interface,'domain_resolver':local_resolver}]
- if has_upstream: out.append(upstream_outbound(node,interface,'original'))
+ if original and has_upstream: out.append(upstream_outbound(node,interface,'original'))
  elif original: out.append({'type':'direct','tag':'original','bind_interface':interface,'domain_resolver':local_resolver})
  if not original:
   out += [upstream_outbound(node,interface,'upstream') if via_relay else {'type':'direct','tag':'upstream','bind_interface':interface,'domain_resolver':local_resolver},
@@ -68,7 +69,6 @@ def build(node, interface, asset_dir, mode, via_relay=False):
     'username':node['username'],'password':node['password'],'network':'tcp','detour':'upstream','domain_resolver':local_resolver}]
  dns=[{'type':'https','tag':'local-dns','server':'223.5.5.5','server_port':443,'path':'/dns-query','bind_interface':interface}]
  if not original or has_upstream: dns.append({'type':'https','tag':'remote-dns','server':'1.1.1.1','server_port':443,'path':'/dns-query','detour':selected})
- if has_upstream and not original: dns.append({'type':'https','tag':'ordinary-dns','server':'1.1.1.1','server_port':443,'path':'/dns-query','detour':'original'})
  td=dict(targets(),server='remote-dns') if opened else dict(targets(),action='predefined',rcode='REFUSED')
  dr=[{'query_type':'AAAA','action':'predefined','rcode':'NOERROR'},td,{'rule_set':['geosite-cn'],'server':'local-dns'}]
  rt={'outbound':'residential'} if opened else {'action':'reject'}
@@ -76,9 +76,10 @@ def build(node, interface, asset_dir, mode, via_relay=False):
   {'ip_cidr':['::/0'],'action':'reject'},dict(targets(),**rt),dict(ip_cidr=IPS[:],**rt),
   {'ip_is_private':True,'outbound':'direct'},{'rule_set':['geosite-cn'],'outbound':'direct'},
   {'action':'resolve','strategy':'ipv4_only'},{'rule_set':['geoip-cn'],'outbound':'direct'}]
- if has_upstream and not original:
-  ordinary={'domain_suffix':ORDINARY_SUFFIXES[:],'domain':ORDINARY_DOMAINS[:]}
-  rules.append(dict(ordinary,outbound='original'));dr.append(dict(ordinary,server='ordinary-dns'))
+ if not original:
+  home_targets={'domain_suffix':HOME_SUFFIXES[:],'domain':HOME_DOMAINS[:]}
+  rules.insert(6,dict(home_targets,outbound='residential'))
+  dr.insert(2,dict(home_targets,server='remote-dns'))
  exclusions=[]
  for host in [x.get('server','') for x in out]:
   try:
@@ -91,7 +92,8 @@ def build(node, interface, asset_dir, mode, via_relay=False):
   'dns':{'servers':dns,'rules':dr,'final':'local-dns' if original and not has_upstream else 'remote-dns','strategy':'ipv4_only'},
   'inbounds':[tun,{'type':'mixed','tag':'mixed-in','listen':'127.0.0.1','listen_port':PORT}],
   'outbounds':out,'route':{'rules':rules,'final':selected,'auto_detect_interface':True,
-    'default_domain_resolver':local_resolver,'rule_set':[{'type':'local','tag':n,'format':'binary','path':str(Path(asset_dir)/(n+'.srs'))} for n in ['geosite-cn','geoip-cn']]}}
+    'default_domain_resolver':local_resolver if original else {'server':'remote-dns','strategy':'ipv4_only'},
+    'rule_set':[{'type':'local','tag':n,'format':'binary','path':str(Path(asset_dir)/(n+'.srs'))} for n in ['geosite-cn','geoip-cn']]}}
 def build_bundle(node,interface,asset_dir):
  node=validate_node(node)
  configs={n:build(node,interface,asset_dir,m) for n,m in

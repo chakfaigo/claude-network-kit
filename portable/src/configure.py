@@ -50,7 +50,7 @@ def main():
         'password': getpass.getpass('家宽密码（隐藏输入）：'),
         'expected_ip': input('预期固定出口 IPv4：').strip(),
     }
-    print('可选普通代理：当前只支持美国出口的 VMess over WebSocket，无 TLS 配置。')
+    print('可选前置／Origin线路：Home中只用于连接家宽；当前仅支持美国出口的 VMess over WebSocket，无 TLS 配置。')
     print('如需分流或前置，按 examples/upstream.example.json 准备自己的文件。')
     upstream = input('该 JSON 文件路径（留空表示仅使用家宽）：').strip()
     if upstream:

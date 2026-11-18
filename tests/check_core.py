@@ -9,7 +9,7 @@ def main():
     spec=importlib.util.spec_from_file_location('config',BASE/'portable/src/guard_config.py');C=importlib.util.module_from_spec(spec);spec.loader.exec_module(C)
     node={'server':'gateway.example.test','port':8001,'username':'fixture-user','password':'fixture-only','expected_ip':'93.184.216.34'}
     upstream={'type':'vmess','server':'upstream.example.test','server_port':8080,'uuid':'11111111-1111-4111-8111-111111111111','security':'auto','alter_id':0,'transport':{'type':'ws','path':'/fixture','headers':{'Host':'upstream.example.test'}}}
-    core=BASE/'portable/assets/sing-box';report={'network_denied':True,'configurations':[],'domain_samples':[]}
+    core=BASE/'portable/assets/sing-box';report={'network_denied':True,'configurations':[],'domain_samples':[],'home_pin_samples':[],'domestic_samples':[]}
     def run(args):
         result=subprocess.run(['/usr/bin/sandbox-exec','-p','(version 1)(allow default)(deny network*)',str(core),*map(str,args)],capture_output=True,text=True,timeout=20)
         if result.returncode:raise RuntimeError(result.stderr)
@@ -26,6 +26,15 @@ def main():
             matched='match rules.' in run(['rule-set','match',path,domain]).stderr
             if matched!=expected:raise RuntimeError('Protected-domain boundary mismatch: '+domain)
             report['domain_samples'].append({'domain':domain,'matches':matched})
+        path=folder/'home-pins.json';path.write_text(json.dumps({'version':4,'rules':[{'domain_suffix':C.HOME_SUFFIXES,'domain':C.HOME_DOMAINS}]}))
+        for domain,expected in [('api.openai.com',True),('chatgpt.com',True),('www.notion.so',True),('marketplace.visualstudio.com',True),('vscode.download.prss.microsoft.com',True),('notopenai.com',False),('chatgpt.com.example.test',False),('x.update.code.visualstudio.com',False)]:
+            matched='match rules.' in run(['rule-set','match',path,domain]).stderr
+            if matched!=expected:raise RuntimeError('Home-pin boundary mismatch: '+domain)
+            report['home_pin_samples'].append({'domain':domain,'matches':matched})
+        for asset,target,expected in [('geosite-cn','www.baidu.com',True),('geosite-cn','www.qq.com',True),('geosite-cn','www.taobao.com',True),('geosite-cn','api.anthropic.com',False),('geoip-cn','223.5.5.5',True),('geoip-cn','1.1.1.1',False)]:
+            matched='match rules.' in run(['rule-set','match','--format','binary',BASE/'portable/assets'/(asset+'.srs'),target]).stderr
+            if matched!=expected:raise RuntimeError('Domestic rule sample mismatch: '+target)
+            report['domestic_samples'].append({'asset':asset,'target':target,'matches':matched})
     (BASE/'core-test-report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n')
     print(json.dumps(report,ensure_ascii=False))
 if __name__=='__main__':main()

@@ -74,18 +74,54 @@ class UpstreamConfigTests(unittest.TestCase):
    self.assertFalse(any('process_name' in r or 'process_path' in r for r in rules))
    for i,r in enumerate(rules):
     if r.get('outbound')=='original':self.assertGreater(i,5)
- def test_home_only_explicit_ordinary_list_uses_original(self):
-  v=C.build(WITH_UPSTREAM,'en0','/fixture','home');self.assertEqual(v['route']['final'],'residential')
-  self.assertIn('openai.com',v['route']['rules'][-1]['domain_suffix'])
-  self.assertEqual(v['route']['rules'][-1]['outbound'],'original')
-  self.assertEqual(v['dns']['rules'][-1]['server'],'ordinary-dns')
-  self.assertEqual(next(x for x in v['dns']['servers'] if x['tag']=='ordinary-dns')['detour'],'original')
+ def test_every_home_variant_has_only_residential_overseas_egress(self):
+  for node in (NODE,WITH_UPSTREAM):
+   for name,v in C.build_bundle(node,'en0','/fixture')['configs'].items():
+    if not name.startswith('home_'):continue
+    with self.subTest(name=name,has_upstream='upstream' in node):
+     self.assertEqual(v['route']['final'],'residential')
+     self.assertEqual({x['tag'] for x in v['outbounds']},{'direct','upstream','residential'})
+     self.assertTrue(all(r.get('outbound') not in ('original','upstream') for r in v['route']['rules']))
+     self.assertEqual({x['tag'] for x in v['dns']['servers']},{'local-dns','remote-dns'})
+     self.assertEqual(v['dns']['final'],'remote-dns')
+     self.assertEqual(v['route']['default_domain_resolver'],{'server':'remote-dns','strategy':'ipv4_only'})
+     self.assertEqual(next(x for x in v['dns']['servers'] if x['tag']=='remote-dns')['detour'],'residential')
+ def test_pinned_home_services_precede_domestic_route_and_dns(self):
+  # Simulate a domestic database false positive: the first matching rule must
+  # still keep these services and their DNS on residential, in every Home mode.
+  def first_match(host,rules,field):
+   for r in rules:
+    if host in r.get('domain',[]) or any(host==s or host.endswith('.'+s) for s in r.get('domain_suffix',[])) or r.get('rule_set') in (['geosite-cn'],['geoip-cn']):
+     return r.get(field,r.get('action'))
+  for node in (NODE,WITH_UPSTREAM):
+   for name,v in C.build_bundle(node,'en0','/fixture')['configs'].items():
+    if not name.startswith('home_'):continue
+    for host in ['api.openai.com','chatgpt.com','www.notion.so','update.code.visualstudio.com','marketplace.visualstudio.com','vscode.download.prss.microsoft.com','vscode.blob.core.windows.net']:
+     with self.subTest(name=name,host=host):
+      self.assertEqual(first_match(host,v['route']['rules'],'outbound'),'residential')
+      self.assertEqual(first_match(host,v['dns']['rules'],'server'),'remote-dns')
+    for host in ['www.qq.com','chatgpt.com.example.test','notopenai.com','update.code.visualstudio.com.example.test']:
+     self.assertEqual(first_match(host,v['route']['rules'],'outbound'),'direct')
+     self.assertEqual(first_match(host,v['dns']['rules'],'server'),'local-dns')
+ def test_home_pin_cannot_override_claude_fault_protection(self):
+  for name,v in C.build_bundle(WITH_UPSTREAM,'en0','/fixture')['configs'].items():
+   if not name.startswith('home_'):continue
+   route=v['route']['rules'];dns=v['dns']['rules']
+   pin=next(i for i,r in enumerate(route) if 'chatgpt.com' in r.get('domain_suffix',[]))
+   self.assertGreater(pin,5);self.assertEqual(route[4].get('action'), 'reject' if name.endswith('_blocked') else None)
+   self.assertEqual(dns[1].get('rcode'),'REFUSED' if name.endswith('_blocked') else None)
+ def test_old_bundle_flavor_rejected_without_migration(self):
+  v=C.build_bundle(WITH_UPSTREAM,'en0','/fixture');v['flavor']='fresh-mac-upstream-v2'
+  with self.assertRaises(ValueError):C.validate_bundle(v)
+  self.assertEqual(I.FLAVOR,C.FLAVOR)
  def test_home_direct_and_relay_keep_same_residential_exit(self):
   configs=C.build_bundle(WITH_UPSTREAM,'en0','/fixture')['configs']
   for name,kind in [('home_direct','direct'),('home_relay','vmess')]:
    out={x['tag']:x for x in configs[name]['outbounds']}
    self.assertEqual(out['upstream']['type'],kind);self.assertEqual(out['residential']['detour'],'upstream');self.assertEqual(out['residential']['server'],NODE['server']);self.assertNotIn('fallback',out['residential'])
-   self.assertEqual(out['original']['server'],UPSTREAM['server'])
+   self.assertNotIn('original',out)
+   self.assertEqual(out['upstream']['domain_resolver']['server'],'local-dns')
+   self.assertEqual(out['residential']['domain_resolver']['server'],'local-dns')
  def test_origin_has_only_selected_proxy_and_direct_no_residential(self):
   v=C.build(WITH_UPSTREAM,'en0','/fixture','original');self.assertEqual({x['tag'] for x in v['outbounds']},{'original','direct'});self.assertEqual(v['route']['final'],'original');self.assertEqual(v['dns']['final'],'remote-dns');self.assertEqual(v['dns']['servers'][1]['detour'],'original');self.assertNotIn(NODE['password'],json.dumps(v))
  def test_invalid_upstream_cannot_add_routes_listeners_or_detours(self):

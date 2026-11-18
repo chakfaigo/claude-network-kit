@@ -1,0 +1,188 @@
+{
+  "version": "v2026.11.18.1",
+  "test_host": {
+    "system": "macOS",
+    "version": "26.2",
+    "architecture": "arm64"
+  },
+  "isolated": {
+    "tests": 238,
+    "passed": true,
+    "suites": [
+      {
+        "suite": "test_check_setup.py",
+        "exit": 0,
+        "tests": 22
+      },
+      {
+        "suite": "test_configure.py",
+        "exit": 0,
+        "tests": 4
+      },
+      {
+        "suite": "test_guard_health.py",
+        "exit": 0,
+        "tests": 14
+      },
+      {
+        "suite": "test_guard_notify.py",
+        "exit": 0,
+        "tests": 23
+      },
+      {
+        "suite": "test_guard_pf.py",
+        "exit": 0,
+        "tests": 14
+      },
+      {
+        "suite": "test_guard_pf_runtime.py",
+        "exit": 0,
+        "tests": 20
+      },
+      {
+        "suite": "test_guard_runtime.py",
+        "exit": 0,
+        "tests": 58
+      },
+      {
+        "suite": "test_portable.py",
+        "exit": 0,
+        "tests": 60
+      },
+      {
+        "suite": "test_user_services.py",
+        "exit": 0,
+        "tests": 23
+      }
+    ]
+  },
+  "source_sha256": {
+    "check_setup.py": "cc25cf0cf7184403d86efd7c529328a621532562e4e1795e67dd1755fab047bd",
+    "configure.py": "e8b4e8d618ecd650af5bbab888bee75a92bc75e6763f610ce721cde7cb97780d",
+    "controller.py": "d553086949655c5d08819b06bf6a49d85bc0ca6ce2129fd89a20230ab426b971",
+    "guard_config.py": "68bf1be136d3d7ca1bbaf1d8ecf5f16fb452f55fba552280444d2fe81e0c53dd",
+    "guard_health.py": "f98435a826cf1c86ec2cba878a62c7ffe135a989f86eb2cb7253e5e95ac99d22",
+    "guard_install.py": "9e1ad6bab281eb011673da88bda9a8afc6f0117978020a8d91ba08757423bf92",
+    "guard_notify.py": "dca072364d298e14d8170657e54822fecfbd400d10f479ab6e410352d409b22e",
+    "guard_pf.py": "20eca076d9660a5215726bbd842686ab9f8629fc219d3626e2c9ea54b879b50f",
+    "guard_runtime.py": "8efe8fbd6c908027cf8ae7de7607e47831230c68e55a67f6eae53bf8d150c138"
+  },
+  "native_offline_core": {
+    "network_denied": true,
+    "configurations": [
+      "False-home_direct.json",
+      "False-home_direct_blocked.json",
+      "False-original.json",
+      "True-home_direct.json",
+      "True-home_direct_blocked.json",
+      "True-original.json",
+      "True-home_relay.json",
+      "True-home_relay_blocked.json",
+      "preflight.json"
+    ],
+    "domain_samples": [
+      {
+        "domain": "claude.app",
+        "matches": true
+      },
+      {
+        "domain": "x.livepreview.claude.app",
+        "matches": true
+      },
+      {
+        "domain": "notclaude.app",
+        "matches": false
+      },
+      {
+        "domain": "claude.app.evil.example",
+        "matches": false
+      },
+      {
+        "domain": "api.anthropic.com",
+        "matches": true
+      },
+      {
+        "domain": "www.douyin.com",
+        "matches": false
+      },
+      {
+        "domain": "chatgpt.com",
+        "matches": false
+      }
+    ],
+    "home_pin_samples": [
+      {
+        "domain": "api.openai.com",
+        "matches": true
+      },
+      {
+        "domain": "chatgpt.com",
+        "matches": true
+      },
+      {
+        "domain": "www.notion.so",
+        "matches": true
+      },
+      {
+        "domain": "marketplace.visualstudio.com",
+        "matches": true
+      },
+      {
+        "domain": "vscode.download.prss.microsoft.com",
+        "matches": true
+      },
+      {
+        "domain": "notopenai.com",
+        "matches": false
+      },
+      {
+        "domain": "chatgpt.com.example.test",
+        "matches": false
+      },
+      {
+        "domain": "x.update.code.visualstudio.com",
+        "matches": false
+      }
+    ],
+    "domestic_samples": [
+      {
+        "asset": "geosite-cn",
+        "target": "www.baidu.com",
+        "matches": true
+      },
+      {
+        "asset": "geosite-cn",
+        "target": "www.qq.com",
+        "matches": true
+      },
+      {
+        "asset": "geosite-cn",
+        "target": "www.taobao.com",
+        "matches": true
+      },
+      {
+        "asset": "geosite-cn",
+        "target": "api.anthropic.com",
+        "matches": false
+      },
+      {
+        "asset": "geoip-cn",
+        "target": "223.5.5.5",
+        "matches": true
+      },
+      {
+        "asset": "geoip-cn",
+        "target": "1.1.1.1",
+        "matches": false
+      }
+    ]
+  },
+  "menu_signature": "ad hoc; codesign --verify --strict passed; not Apple notarized",
+  "local_network_deployed": false,
+  "target_machine_acceptance": "not performed; required on recipient Mac",
+  "limitations": [
+    "Existing installations need a separate migration and restore plan",
+    "No claim of eliminating provider outages",
+    "No change to service-region eligibility or location permissions"
+  ]
+}

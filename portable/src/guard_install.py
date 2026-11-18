@@ -24,7 +24,7 @@ PACKAGE = Path(__file__).resolve().parent
 DELIVERY = PACKAGE.parent
 PYTHON = ROOT / 'python/bin/python3.12'
 RUNTIME_FILES = ('guard_runtime.py', 'guard_config.py', 'guard_health.py', 'guard_pf.py', 'guard_install.py', 'controller.py', 'guard_notify.py')
-FLAVOR = 'fresh-mac-upstream-v2'
+FLAVOR = 'fresh-mac-home-unified-v3'
 
 
 def load(name):
